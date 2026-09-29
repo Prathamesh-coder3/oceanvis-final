@@ -175,10 +175,10 @@ export default function Sidebar() {
         })}
       </div>
 
-      {/* Demo badge */}
+      {/* Operational telemetry badge */}
       <div style={{ padding: "8px 10px", borderTop: "1px solid var(--border)", flexShrink: 0 }}>
-        <div style={{ fontSize: 9, color: "var(--text-muted)", textAlign: "center", letterSpacing: "0.5px" }}>
-          PREVIEW DATA
+        <div style={{ fontSize: 9, color: "var(--accent-emerald)", textAlign: "center", letterSpacing: "0.5px", fontWeight: 600 }}>
+          OPERATIONAL · LIVE TELEMETRY
         </div>
       </div>
     </aside>

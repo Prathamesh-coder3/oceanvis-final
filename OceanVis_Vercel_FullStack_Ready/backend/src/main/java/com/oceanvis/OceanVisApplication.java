@@ -78,7 +78,7 @@ public class OceanVisApplication {
         System.out.println(" OCEANVIS");
         System.out.println(" SCIENTIFIC OCEAN VISUALIZATION PLATFORM");
         System.out.println("==============================================================");
-        System.out.println(" DATA MODE       = DEMO");
+        System.out.println(" DATA MODE       = LIVE (OPERATIONAL)");
         System.out.println(" SERVER PORT     = " + actualPort);
         System.out.println(" LOCAL URL       = " + localUrl);
         System.out.println(" HEALTH          = " + localUrl + "/api/health");

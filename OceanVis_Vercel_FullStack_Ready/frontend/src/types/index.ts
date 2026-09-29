@@ -1,4 +1,4 @@
-export type AppMode = "DEMO" | "REAL";
+export type AppMode = "DEMO" | "REAL" | "LIVE";
 
 export interface Variable {
   id: string;
@@ -12,12 +12,17 @@ export interface Variable {
 
 export interface Observation {
   id: string;
-  type: "ARGO Float" | "Glider" | "CTD Station" | "BGC Sensor" | "Mooring" | "Buoy";
+  type: "ARGO Float" | "Glider" | "CTD Station" | "BGC Sensor" | "Mooring" | "Buoy" | "Custom Station";
   lat: number;
   lon: number;
   date: string;
   maxDepth: number;
   variables: string[];
+  value?: number;
+  source?: string;
+  surfaceTemperature?: number;
+  surfaceSalinity?: number;
+  status?: string;
 }
 
 export interface Alert {
@@ -33,6 +38,7 @@ export interface Alert {
 
 export interface DataSource {
   id: string;
+  name?: string;
   type: string;
   status: "LIVE" | "AVAILABLE" | "UNAVAILABLE" | "ERROR" | "DEMO";
   description: string;

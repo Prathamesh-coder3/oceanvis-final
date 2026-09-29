@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const BASE = (import.meta.env.VITE_API_BASE_URL?.trim() || "/api").replace(/\/+$/, "");
-let requestId = 0;
 const cache = new Map<string, { data: unknown; ts: number }>();
-const CACHE_TTL = 60_000; // 1 minute
+const CACHE_TTL = 30_000; // 30 seconds
 
 function getCacheKey(url: string, params: Record<string, unknown> = {}): string {
   return url + JSON.stringify(params);
@@ -26,7 +25,6 @@ async function get<T>(url: string, params: Record<string, unknown> = {}, dedupKe
   const cached = fromCache(cacheKey);
   if (cached) return cached as T;
 
-  // Cancel previous request with same dedup key
   if (dedupKey) {
     const prev = pendingRequests.get(dedupKey);
     if (prev) prev.abort();
@@ -37,7 +35,7 @@ async function get<T>(url: string, params: Record<string, unknown> = {}, dedupKe
       toCache(cacheKey, res.data);
       if (pendingRequests.get(dedupKey) === ctrl) pendingRequests.delete(dedupKey);
       return res.data;
-    } catch (e) {
+    } catch (e: unknown) {
       if (pendingRequests.get(dedupKey) === ctrl) pendingRequests.delete(dedupKey);
       throw e;
     }
@@ -50,20 +48,21 @@ async function get<T>(url: string, params: Record<string, unknown> = {}, dedupKe
 
 export const api = {
   health: () => get<Record<string, unknown>>("/health"),
-  dataset: () => get<Record<string, unknown>>("/demo/dataset"),
-  observations: () => get<unknown[]>("/demo/observations"),
-  alerts: () => get<unknown[]>("/demo/alerts"),
-  sources: () => get<unknown[]>("/demo/sources"),
-  overview: () => get<Record<string, unknown>>("/demo/overview"),
+  dataStatus: () => get<Record<string, unknown>>("/data-status"),
+  dataset: () => get<Record<string, unknown>>("/datasets"),
+  observations: () => get<unknown[]>("/observations"),
+  alerts: () => get<unknown[]>("/alerts"),
+  sources: () => get<unknown[]>("/sources"),
+  overview: () => get<Record<string, unknown>>("/overview"),
   modelSlice: (variable: string, depthIndex: number, timeIndex: number) =>
-    get<unknown>("/demo/model-slice", { variable, depthIndex, timeIndex }, `model-slice-${variable}`),
-  profile: (id: string) => get<unknown>(`/demo/profile/${id}`),
+    get<unknown>("/model-slice", { variable, depthIndex, timeIndex }, `model-slice-${variable}-${depthIndex}-${timeIndex}`),
+  profile: (id: string) => get<unknown>(`/profile/${encodeURIComponent(id)}`),
   comparison: (variable: string) =>
-    get<unknown>("/demo/comparison", { variable }, `comparison-${variable}`),
+    get<unknown>("/comparison", { variable }, `comparison-${variable}`),
   timeseries: (variable: string, lat: number, lon: number) =>
-    get<unknown>("/demo/timeseries", { variable, lat, lon }, `timeseries-${variable}`),
+    get<unknown>("/timeseries", { variable, lat, lon }, `timeseries-${variable}-${lat}-${lon}`),
   transect: (variable: string) =>
-    get<unknown>("/demo/transect", { variable }, `transect-${variable}`),
+    get<unknown>("/transect", { variable }, `transect-${variable}`),
 };
 
 export function clearCache() {

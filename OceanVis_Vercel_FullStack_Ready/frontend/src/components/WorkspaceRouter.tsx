@@ -67,7 +67,7 @@ function WorkspaceInfo({ view }: { view: ActiveView }) {
         <div className="panel workspace-info-card">
           <div className="panel-header">Active Context</div>
           <div className="panel-body">
-            <div className="workspace-context-row"><span>Data state</span><strong>PROTOTYPE DATA</strong></div>
+            <div className="workspace-context-row"><span>Data state</span><strong style={{ color: "var(--accent-emerald)" }}>LIVE OCEAN DATA (OPERATIONAL)</strong></div>
             <div className="workspace-context-row"><span>Active view</span><strong>{view}</strong></div>
             <div className="workspace-context-row"><span>Shared state</span><strong>TIME · DEPTH · VARIABLE</strong></div>
             <div className="workspace-context-note">This workspace is connected to the same OceanVis state used by the 2D map, 3D globe and analysis panels.</div>

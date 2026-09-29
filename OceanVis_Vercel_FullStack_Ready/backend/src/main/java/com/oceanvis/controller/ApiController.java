@@ -1,7 +1,8 @@
 package com.oceanvis.controller;
 
-import com.oceanvis.service.DemoDataService;
+import com.oceanvis.service.OceanDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -12,7 +13,10 @@ import java.util.Map;
 public class ApiController {
 
     @Autowired
-    private DemoDataService demoDataService;
+    private OceanDataService oceanDataService;
+
+    @Value("${oceanvis.demo-mode:false}")
+    private boolean demoMode;
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> health() {
@@ -20,89 +24,71 @@ public class ApiController {
             "status", "UP",
             "application", "OceanVis",
             "version", "1.0.0",
-            "mode", "DEMO",
+            "mode", demoMode ? "DEMO" : "LIVE",
             "timestamp", System.currentTimeMillis()
         ));
     }
 
-    @GetMapping("/demo/dataset")
-    public ResponseEntity<Map<String, Object>> getDemoDataset() {
-        return ResponseEntity.ok(demoDataService.getDemoDataset());
+    @GetMapping("/data-status")
+    public ResponseEntity<Map<String, Object>> dataStatus() {
+        return ResponseEntity.ok(oceanDataService.getDataStatus());
     }
 
-    @GetMapping("/demo/observations")
-    public ResponseEntity<Object> getDemoObservations() {
-        return ResponseEntity.ok(demoDataService.getDemoObservations());
+    @GetMapping({"/datasets", "/demo/dataset"})
+    public ResponseEntity<Map<String, Object>> getDatasets() {
+        return ResponseEntity.ok(oceanDataService.getDatasetMetadata());
     }
 
-    @GetMapping("/demo/alerts")
-    public ResponseEntity<Object> getDemoAlerts() {
-        return ResponseEntity.ok(demoDataService.getDemoAlerts());
+    @GetMapping({"/observations", "/demo/observations"})
+    public ResponseEntity<Object> getObservations() {
+        return ResponseEntity.ok(oceanDataService.getRealObservations());
     }
 
-    @GetMapping("/demo/sources")
-    public ResponseEntity<Object> getDemoSources() {
-        return ResponseEntity.ok(demoDataService.getDataSources());
+    @GetMapping({"/alerts", "/demo/alerts"})
+    public ResponseEntity<Object> getAlerts() {
+        return ResponseEntity.ok(oceanDataService.getLiveAlerts());
     }
 
-    @GetMapping("/demo/overview")
-    public ResponseEntity<Object> getDemoOverview() {
-        return ResponseEntity.ok(demoDataService.getOverviewStats());
+    @GetMapping({"/sources", "/demo/sources"})
+    public ResponseEntity<Object> getSources() {
+        return ResponseEntity.ok(oceanDataService.getDataSources());
     }
 
-    @GetMapping("/demo/model-slice")
+    @GetMapping({"/overview", "/demo/overview"})
+    public ResponseEntity<Object> getOverview() {
+        return ResponseEntity.ok(oceanDataService.getOverviewStats());
+    }
+
+    @GetMapping({"/model-slice", "/demo/model-slice", "/model/slice", "/ocean-data"})
     public ResponseEntity<Object> getModelSlice(
             @RequestParam(defaultValue = "temperature") String variable,
             @RequestParam(defaultValue = "0") int depthIndex,
             @RequestParam(defaultValue = "0") int timeIndex) {
-        return ResponseEntity.ok(demoDataService.getModelSlice(variable, depthIndex, timeIndex));
+        return ResponseEntity.ok(oceanDataService.getModelSlice(variable, depthIndex, timeIndex));
     }
 
-    @GetMapping("/demo/profile/{observationId}")
+    @GetMapping({"/profile/{observationId}", "/demo/profile/{observationId}"})
     public ResponseEntity<Object> getProfile(@PathVariable String observationId) {
-        return ResponseEntity.ok(demoDataService.getObservationProfile(observationId));
+        return ResponseEntity.ok(oceanDataService.getObservationProfile(observationId));
     }
 
-    @GetMapping("/demo/comparison")
+    @GetMapping({"/comparison", "/demo/comparison"})
     public ResponseEntity<Object> getComparison(
             @RequestParam(defaultValue = "temperature") String variable) {
-        return ResponseEntity.ok(demoDataService.getModelObservationComparison(variable));
+        return ResponseEntity.ok(oceanDataService.getModelObservationComparison(variable));
     }
 
-    @GetMapping("/demo/timeseries")
+    @GetMapping({"/timeseries", "/demo/timeseries"})
     public ResponseEntity<Object> getTimeSeries(
             @RequestParam(defaultValue = "temperature") String variable,
             @RequestParam(defaultValue = "12.5") double lat,
             @RequestParam(defaultValue = "72.1") double lon) {
-        return ResponseEntity.ok(demoDataService.getTimeSeries(variable, lat, lon));
+        return ResponseEntity.ok(oceanDataService.getTimeSeries(variable, lat, lon));
     }
 
-    @GetMapping("/demo/transect")
+    @GetMapping({"/transect", "/demo/transect"})
     public ResponseEntity<Object> getTransect(
             @RequestParam(defaultValue = "temperature") String variable) {
-        return ResponseEntity.ok(demoDataService.getTransect(variable));
-    }
-
-    @GetMapping("/data-status")
-    public ResponseEntity<Map<String, Object>> dataStatus() {
-        return ResponseEntity.ok(Map.of(
-            "status", "READY",
-            "dataMode", "DEMO",
-            "providers", Map.of(
-                "HYCOM", "SIMULATED",
-                "ARGO", "SIMULATED",
-                "GLIDER", "SIMULATED",
-                "CTD", "SIMULATED",
-                "BUOY", "SIMULATED"
-            ),
-            "cacheEnabled", true,
-            "observationsLoaded", 16,
-            "modelsLoaded", 4
-        ));
-    }
-
-    @GetMapping("/datasets")
-    public ResponseEntity<Object> getDatasets() {
-        return ResponseEntity.ok(demoDataService.getDemoDataset());
+        return ResponseEntity.ok(oceanDataService.getTransect(variable));
     }
 }
