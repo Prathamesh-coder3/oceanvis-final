@@ -1,0 +1,7 @@
+target
+.git
+.gitignore
+*.zip
+*.log
+.DS_Store
+backend/.backend-port

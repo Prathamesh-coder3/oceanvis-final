@@ -1,0 +1,95 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #030d1a; }
+#splash {
+  position: fixed; inset: 0; z-index: 9999;
+  background: radial-gradient(ellipse at 50% 60%, #071e3d 0%, #030d1a 70%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+#splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.splash-ocean {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 35%;
+  background: linear-gradient(180deg, transparent 0%, #040f2280 30%, #071e3d90 100%);
+  overflow: hidden;
+}
+.wave {
+  position: absolute; width: 200%; height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160'%3E%3Cpath fill='%230066cc22' d='M0,64 C360,128 720,0 1080,64 C1260,96 1350,128 1440,96 L1440,160 L0,160Z'/%3E%3C/svg%3E") repeat-x center/50% 100%;
+  animation: wave-move 8s linear infinite;
+  opacity: 0.6;
+}
+.wave2 {
+  position: absolute; width: 200%; height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160'%3E%3Cpath fill='%2300aaff18' d='M0,96 C320,64 640,128 960,96 C1100,80 1280,64 1440,80 L1440,160 L0,160Z'/%3E%3C/svg%3E") repeat-x center/50% 100%;
+  animation: wave-move 12s linear infinite reverse;
+  opacity: 0.5;
+}
+@keyframes wave-move { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.splash-glow {
+  position: absolute; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, #0066ff0a 0%, transparent 70%);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow { 0%,100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } }
+.splash-content { position: relative; z-index: 10; text-align: center; }
+.splash-logo-ring {
+  width: 100px; height: 100px; margin: 0 auto 24px;
+  border-radius: 50%;
+  border: 2px solid #1e6fff44;
+  background: radial-gradient(circle at 35% 35%, #1e6fff22, #030d1a80);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  box-shadow: 0 0 30px #1e6fff33, inset 0 0 20px #1e6fff11;
+  animation: ring-pulse 3s ease-in-out infinite;
+}
+@keyframes ring-pulse {
+  0%,100% { box-shadow: 0 0 30px #1e6fff33, inset 0 0 20px #1e6fff11; }
+  50% { box-shadow: 0 0 60px #1e6fff55, inset 0 0 30px #1e6fff22; }
+}
+.splash-logo-inner {
+  font-size: 42px; font-weight: 900;
+  color: #1e6fff;
+  font-family: Arial, sans-serif;
+  letter-spacing: -2px;
+}
+.splash-title {
+  font-size: 48px; font-weight: 800; letter-spacing: -1px;
+  color: #e0eeff;
+  font-family: Arial, sans-serif;
+  margin-bottom: 8px;
+}
+.splash-subtitle {
+  font-size: 14px; color: #6699cc; letter-spacing: 2px; text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  margin-bottom: 40px;
+}
+.splash-progress {
+  width: 260px; height: 2px; background: #1a3a5c; border-radius: 2px;
+  margin: 0 auto 16px; overflow: hidden;
+}
+.splash-progress-bar {
+  height: 100%; background: linear-gradient(90deg, #1e6fff, #00d4ff);
+  border-radius: 2px; width: 0%;
+  animation: progress-fill 2.2s ease-out forwards;
+  box-shadow: 0 0 8px #1e6fff88;
+}
+@keyframes progress-fill { 0% { width: 0%; } 60% { width: 75%; } 90% { width: 92%; } 100% { width: 100%; } }
+.splash-status {
+  font-size: 11px; color: #3366aa; letter-spacing: 1.5px; text-transform: uppercase;
+  font-family: Arial, sans-serif;
+  animation: status-pulse 1.5s ease-in-out infinite;
+}
+@keyframes status-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+.splash-dots::after { content: ''; animation: dots 1.5s steps(4,end) infinite; }
+@keyframes dots { 0%,20% { content: '.'; } 40% { content: '..'; } 60%,80% { content: '...'; } 100% { content: ''; } }
+.splash-version {
+  position: absolute; bottom: 24px; right: 24px;
+  font-size: 10px; color: #2a4a6a; font-family: Arial, sans-serif;
+  letter-spacing: 1px;
+}
+.splash-sih {
+  position: absolute; bottom: 24px; left: 24px;
+  font-size: 10px; color: #2a4a6a; font-family: Arial, sans-serif;
+  letter-spacing: 1px;
+}
+#root { width: 100%; height: 100vh; overflow: hidden; }

@@ -1,0 +1,21 @@
+# Vercel container for OceanVis Spring Boot backend
+# The application reads the Vercel-provided PORT environment variable.
+FROM maven:3.9-eclipse-temurin-21 AS build
+
+WORKDIR /app
+COPY pom.xml .
+RUN mvn -B -DskipTests dependency:go-offline
+COPY src ./src
+RUN mvn -B -DskipTests clean package
+
+FROM eclipse-temurin:21-jre-jammy
+
+WORKDIR /app
+COPY --from=build /app/target/oceanvis-1.0.0.jar /app/oceanvis.jar
+
+# Vercel injects PORT. Spring Boot is configured to bind to 0.0.0.0.
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=25"
+
+EXPOSE 80
+
+CMD ["java", "-jar", "/app/oceanvis.jar"]

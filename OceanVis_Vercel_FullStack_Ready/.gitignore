@@ -1,0 +1,9 @@
+node_modules/
+dist/
+target/
+.vercel/
+.backend-port
+*.log
+.DS_Store
+.idea/
+.vscode/
